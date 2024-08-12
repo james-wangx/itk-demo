@@ -27,6 +27,14 @@ static inline void output_filename()
 	MEM_free(system_log_filename);
 }
 
+static tag_t get_session()
+{
+	tag_t session;
+	POM_ask_session(&session);
+
+	return session;
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -63,7 +71,11 @@ int ITK_user_main(int argc, char** argv)
 	// Need env: TC_JOURNAL=FULL
 	JOURNAL_comment("Preparing to list tool formats\n");
 	TC_write_syslog("Preparing to list tool formats\n");
+	
 	/* Call your functions between here */
+	tag_t session = get_session();
+	std::cout << session << std::endl;
+
 
 	ITK_exit_module(TRUE);
 
