@@ -1,8 +1,12 @@
 #include <iostream>
+#include <string>
 
 #include <tcinit/tcinit.h>
 #include <tc/emh.h>
+#include <tc/tc_util.h>
 #include <mld/journal/journal.h>
+
+#include "util.hpp"
 
 const int WRONG_USAGE = 100001;
 
@@ -17,7 +21,7 @@ static inline void output_filename()
 {
 	char* journal_filename;
 	char* system_log_filename;
-	
+
 	JOURNAL_ask_file_name(&journal_filename);
 	EMH_ask_system_log_filename(&system_log_filename);
 	std::cout << "journal file name: " << journal_filename << std::endl;
@@ -33,6 +37,27 @@ static tag_t get_session()
 	POM_ask_session(&session);
 
 	return session;
+}
+
+static std::string get_tc_root()
+{
+	const char* env = "FMS_HOME";
+	const char* fms_home = TC_getenv(env);
+
+	if (!fms_home)
+		std::cout << "Unknown environment variable: " << env << std::endl;
+
+	return util::get_parent_path(fms_home);
+}
+
+static std::string get_tc_bin()
+{
+	std::string tc_root = get_tc_root();
+
+	if (tc_root.empty())
+		return "";
+
+	return tc_root + "\\" + "bin";
 }
 
 int ITK_user_main(int argc, char** argv)
@@ -71,11 +96,14 @@ int ITK_user_main(int argc, char** argv)
 	// Need env: TC_JOURNAL=FULL
 	JOURNAL_comment("Preparing to list tool formats\n");
 	TC_write_syslog("Preparing to list tool formats\n");
-	
-	/* Call your functions between here */
-	tag_t session = get_session();
-	std::cout << session << std::endl;
 
+	/* Call your functions between here */
+	//tag_t session = get_session();
+	std::string tc_root = get_tc_root();
+	std::string tc_bin = get_tc_bin();
+
+	std::cout << "tc root: " << tc_root << std::endl;
+	std::cout << "tc_bin: " << tc_bin << std::endl;
 
 	ITK_exit_module(TRUE);
 
