@@ -13,4 +13,4 @@ namespace util
 			return "";
 	}
 
-}
+} // namespace util

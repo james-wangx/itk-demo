@@ -60,6 +60,17 @@ static std::string get_tc_bin()
 	return tc_root + "\\" + "bin";
 }
 
+static void output_current_user()
+{
+	char* username;
+	tag_t user;
+	
+	POM_get_user(&username, &user);
+	std::cout << "current username: " << username << std::endl;
+	
+	MEM_free(username);
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -99,11 +110,14 @@ int ITK_user_main(int argc, char** argv)
 
 	/* Call your functions between here */
 	//tag_t session = get_session();
-	std::string tc_root = get_tc_root();
-	std::string tc_bin = get_tc_bin();
+	
+	//std::string tc_root = get_tc_root();
+	//std::string tc_bin = get_tc_bin();
+	//std::cout << "tc root: " << tc_root << std::endl;
+	//std::cout << "tc_bin: " << tc_bin << std::endl;
 
-	std::cout << "tc root: " << tc_root << std::endl;
-	std::cout << "tc_bin: " << tc_bin << std::endl;
+	output_current_user();
+
 
 	ITK_exit_module(TRUE);
 
