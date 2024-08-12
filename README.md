@@ -1,3 +1,3 @@
-# itk-demo
+# tc-itk-demo
 
 Teamcener ITK demo
