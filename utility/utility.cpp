@@ -213,6 +213,54 @@ static tag_t get_latest_rev(const char* item_uid)
 	return rev;
 }
 
+static int compare_dates(const date_t& date1, const date_t& date2)
+{
+	if (date1.year < date2.year) return -1;
+	if (date1.year > date2.year) return 1;
+
+	if (date1.month < date2.month) return -1;
+	if (date1.month > date2.month) return 1;
+
+	if (date1.day < date2.day) return -1;
+	if (date1.day > date2.day) return 1;
+
+	if (date1.hour < date2.hour) return -1;
+	if (date1.hour > date2.hour) return 1;
+
+	if (date1.minute < date2.minute) return -1;
+	if (date1.minute > date2.minute) return 1;
+
+	if (date1.second < date2.second) return -1;
+	if (date1.second > date2.second) return 1;
+
+	return 0;
+}
+
+static tag_t get_latest_released_rev(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t* revs = nullptr;
+	tag_t latest_released_rev = NULLTAG;
+	int rev_count = 0;
+	date_t latest_date = { 0 };
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	ITKCALL(ITEM_list_all_revs(item, &rev_count, &revs));
+
+	for (size_t i = 0; i < rev_count; i++)
+	{
+		date_t rev_date = { 0 };
+		ITKCALL(AOM_ask_value_date(revs[i], "date_released", &rev_date));
+		if (compare_dates(rev_date, latest_date) >= 0)
+		{
+			latest_date = rev_date;
+			latest_released_rev = revs[i];
+		}
+	}
+
+	return latest_released_rev;
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
