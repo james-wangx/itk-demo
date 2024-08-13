@@ -7,6 +7,7 @@
 #include <tccore/aom.h>
 #include <tccore/aom_prop.h>
 #include <tccore/tctype.h>
+#include <tccore/item.h>
 #include <sa/sa.h>
 #include <mld/journal/journal.h>
 
@@ -135,11 +136,60 @@ static tag_t get_user_mailbox_folder(tag_t& user)
 	return mailbox_folder;
 }
 
+
 static tag_t get_user_worklist(tag_t& user)
 {
 	tag_t worklist = NULLTAG;
 
 	
+}
+
+static void create_item()
+{
+	// Create form
+	tag_t type = NULLTAG;
+	TCTYPE_find_type("ItemRevision Master", "ItemRevision Master", &type);
+	
+	tag_t create_input = NULLTAG;
+	TCTYPE_construct_create_input(type, &create_input);
+
+	const char* form_name[1] = { "1234567/A" };
+	TCTYPE_set_create_display_value(create_input, const_cast<char*>("object_name"), 1, form_name);
+
+	tag_t form = NULLTAG;
+	TCTYPE_create_object(create_input, &form);
+	AOM_save(form);
+
+
+	// Create item revision
+	TCTYPE_find_type("ItemRevision", "ItemRevision", &type);
+
+	tag_t rev_create_input = NULLTAG;
+	TCTYPE_construct_create_input(type, &rev_create_input);
+	
+	AOM_set_value_tag(rev_create_input, "item_master_tag", form);
+
+
+	// Create item
+	TCTYPE_find_type("Item", "Item", & type);
+
+	tag_t item_create_input = NULLTAG;
+	TCTYPE_construct_create_input(type, &item_create_input);
+
+	const char* item_id[1] = { "1234567" };
+	TCTYPE_set_create_display_value(item_create_input, const_cast<char*>("item_id"), 1, item_id);
+
+	const char* item_name[1] = { "1234567" };
+	TCTYPE_set_create_display_value(item_create_input, const_cast<char*>("object_name"), 1, item_name);
+
+	AOM_set_value_tag(item_create_input, "revision", rev_create_input);
+
+	tag_t item = NULLTAG;
+	TCTYPE_create_object(item_create_input, &item);
+	
+	ITEM_save_item(item);
+
+	std::cout << "item: " << item_name[0] << " has been created." << std::endl;
 }
 
 int ITK_user_main(int argc, char** argv)
@@ -205,19 +255,20 @@ int ITK_user_main(int argc, char** argv)
 	//std::cout << "user newstuff folder name: " << folder_name << std::endl;
 	//MEM_free(folder_name);
 
-	tag_t user = get_current_user();
-	tag_t mailbox_folder = get_user_mailbox_folder(user);
-	char* folder_name = nullptr;
-	AOM_ask_value_string(mailbox_folder, "object_name", &folder_name);
-	std::cout << "user mailbox folder name: " << folder_name << std::endl;
-	MEM_free(folder_name);
+	//tag_t user = get_current_user();
+	//tag_t mailbox_folder = get_user_mailbox_folder(user);
+	//char* folder_name = nullptr;
+	//AOM_ask_value_string(mailbox_folder, "object_name", &folder_name);
+	//std::cout << "user mailbox folder name: " << folder_name << std::endl;
+	//MEM_free(folder_name);
 
-	tag_t type = NULLTAG;
-	char* class_name = nullptr;
-	TCTYPE_ask_object_type(mailbox_folder, &type);
-	TCTYPE_ask_class_name2(type, &class_name);
-	std::cout << "mailbox type name: " << class_name << std::endl;
+	//tag_t type = NULLTAG;
+	//char* class_name = nullptr;
+	//TCTYPE_ask_object_type(mailbox_folder, &type);
+	//TCTYPE_ask_class_name2(type, &class_name);
+	//std::cout << "mailbox type name: " << class_name << std::endl;
 
+	create_item();
 
 	ITK_exit_module(TRUE);
 
