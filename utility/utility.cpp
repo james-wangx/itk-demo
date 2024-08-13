@@ -296,6 +296,35 @@ static void output_all_revs(const char* item_uid)
 	util::mem_free_s(revs);
 }
 
+static void output_all_base_revs(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t base_rev = NULLTAG;
+	tag_t* revs = nullptr;
+	tag_t* status = nullptr;
+	int rev_count = 0;
+	int rel_count = 0;
+	char* rev_id = nullptr;
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	ITEM_list_all_revs(item, &rev_count, &revs);
+
+	for (size_t i = 0; i < rev_count; i++)
+	{
+		WSOM_ask_release_status_list(revs[i], &rel_count, &status);
+		if (rel_count)
+		{
+			AOM_ask_value_string(revs[i], "item_revision_id", &rev_id);
+			std::cout << "released item revision id: " << rev_id << std::endl;
+			ITEM_rev_find_base_rev(revs[i], &base_rev);
+			if (base_rev)
+				std::cout << "this is base rev" << std::endl;
+			else
+				std::cout << "this is not base rev" << std::endl;
+		}
+	}
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -383,7 +412,9 @@ int ITK_user_main(int argc, char** argv)
 
 	//output_workflow_num("wWLAAQrt5xMzAD");
 
-	output_all_revs("wWLAAQrt5xMzAD");
+	//output_all_revs("wWLAAQrt5xMzAD");
+
+	output_all_base_revs("wWLAAQrt5xMzAD");
 
 
 	ITK_exit_module(TRUE);
