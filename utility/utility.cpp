@@ -276,6 +276,26 @@ static void output_workflow_num(const char* item_uid)
 	MEM_free(workflows);
 }
 
+static void output_all_revs(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t* revs = nullptr;
+	int count = 0;
+	char* rev_id = nullptr;
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	ITEM_list_all_revs(item, &count, &revs);
+
+	for (size_t i = 0; i < count; i++)
+	{
+		AOM_ask_value_string(revs[i], "item_revision_id", &rev_id);
+		std::cout << "item revision id: " << rev_id << std::endl;
+		util::mem_free_s(rev_id);
+	}
+
+	util::mem_free_s(revs);
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -361,7 +381,9 @@ int ITK_user_main(int argc, char** argv)
 	//std::cout << "latest item rev: " << rev_name << std::endl;
 	//MEM_free(rev_name);
 
-	output_workflow_num("wWLAAQrt5xMzAD");
+	//output_workflow_num("wWLAAQrt5xMzAD");
+
+	output_all_revs("wWLAAQrt5xMzAD");
 
 
 	ITK_exit_module(TRUE);

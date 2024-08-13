@@ -3,10 +3,22 @@
 
 #include <string>
 
+#include <base_utils/Mem.h>
+
 namespace util
 {
 
 	std::string get_parent_path(const std::string& path);
+
+	template <typename T>
+	void mem_free_s(T*& ptr)
+	{
+		if (ptr)
+		{
+			MEM_free(ptr);
+			ptr = nullptr;
+		}
+	}
 
 } // namespace util
 
