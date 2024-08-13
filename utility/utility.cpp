@@ -4,6 +4,8 @@
 #include <tcinit/tcinit.h>
 #include <tc/emh.h>
 #include <tc/tc_util.h>
+#include <tccore/aom.h>
+#include <tccore/aom_prop.h>
 #include <sa/sa.h>
 #include <mld/journal/journal.h>
 
@@ -93,6 +95,27 @@ static void output_current_group_role()
 	MEM_free(role_name);
 }
 
+static tag_t get_current_user()
+{
+	char* username;
+	tag_t user;
+
+	POM_get_user(&username, &user);
+	std::cout << "current user: " << username << std::endl;
+
+	MEM_free(username);
+	return user;
+}
+
+static tag_t get_user_home_folder(tag_t &user)
+{
+	tag_t user_home_folder = NULLTAG;
+	
+	SA_ask_user_home_folder(user, &user_home_folder);
+
+	return user_home_folder;
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -140,7 +163,14 @@ int ITK_user_main(int argc, char** argv)
 
 	//output_current_user();
 
-	output_current_group_role();
+	//output_current_group_role();
+
+	//tag_t user = get_current_user();
+	//tag_t user_home_folder = get_user_home_folder(user);
+	//char* home_folder_name = nullptr;
+	//AOM_ask_value_string(user_home_folder, "object_name", &home_folder_name);
+	//std::cout << "user home folder name: " << home_folder_name << std::endl;
+	//MEM_free(home_folder_name);
 
 
 	ITK_exit_module(TRUE);
