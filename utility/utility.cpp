@@ -116,6 +116,15 @@ static tag_t get_user_home_folder(tag_t &user)
 	return user_home_folder;
 }
 
+static tag_t get_user_newstuff_folder(tag_t& user)
+{
+	tag_t user_newstuff_folder = NULLTAG;
+
+	SA_ask_user_newstuff_folder(user, &user_newstuff_folder);
+
+	return user_newstuff_folder;
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -172,6 +181,12 @@ int ITK_user_main(int argc, char** argv)
 	//std::cout << "user home folder name: " << home_folder_name << std::endl;
 	//MEM_free(home_folder_name);
 
+	tag_t user = get_current_user();
+	tag_t user_newstuff_folder = get_user_newstuff_folder(user);
+	char* folder_name = nullptr;
+	AOM_ask_value_string(user_newstuff_folder, "object_name", &folder_name);
+	std::cout << "user newstuff folder name: " << folder_name << std::endl;
+	MEM_free(folder_name);
 
 	ITK_exit_module(TRUE);
 
