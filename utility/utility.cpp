@@ -69,10 +69,10 @@ static void output_current_user()
 {
 	char* username;
 	tag_t user;
-	
+
 	POM_get_user(&username, &user);
 	std::cout << "current username: " << username << std::endl;
-	
+
 	MEM_free(username);
 }
 
@@ -109,10 +109,10 @@ static tag_t get_current_user()
 	return user;
 }
 
-static tag_t get_user_home_folder(tag_t &user)
+static tag_t get_user_home_folder(tag_t& user)
 {
 	tag_t user_home_folder = NULLTAG;
-	
+
 	SA_ask_user_home_folder(user, &user_home_folder);
 
 	return user_home_folder;
@@ -141,7 +141,7 @@ static tag_t get_user_worklist(tag_t& user)
 {
 	tag_t worklist = NULLTAG;
 
-	
+
 }
 
 static void create_item()
@@ -149,7 +149,7 @@ static void create_item()
 	// Create form
 	tag_t type = NULLTAG;
 	TCTYPE_find_type("ItemRevision Master", "ItemRevision Master", &type);
-	
+
 	tag_t create_input = NULLTAG;
 	TCTYPE_construct_create_input(type, &create_input);
 
@@ -166,12 +166,12 @@ static void create_item()
 
 	tag_t rev_create_input = NULLTAG;
 	TCTYPE_construct_create_input(type, &rev_create_input);
-	
+
 	AOM_set_value_tag(rev_create_input, "item_master_tag", form);
 
 
 	// Create item
-	TCTYPE_find_type("Item", "Item", & type);
+	TCTYPE_find_type("Item", "Item", &type);
 
 	tag_t item_create_input = NULLTAG;
 	TCTYPE_construct_create_input(type, &item_create_input);
@@ -186,10 +186,20 @@ static void create_item()
 
 	tag_t item = NULLTAG;
 	TCTYPE_create_object(item_create_input, &item);
-	
+
 	ITEM_save_item(item);
 
 	std::cout << "item: " << item_name[0] << " has been created." << std::endl;
+}
+
+static void copy_item(const char* source_rev_uid, const char* target_item_id, const char* target_rev_id)
+{
+	tag_t source_rev = NULLTAG;
+	tag_t target_item = NULLTAG;
+	tag_t target_rev = NULLTAG;
+
+	ITK__convert_uid_to_tag(source_rev_uid, &source_rev);
+	ITKCALL(ITEM_copy_item(source_rev, target_item_id, target_rev_id, &target_item, &target_rev));
 }
 
 int ITK_user_main(int argc, char** argv)
@@ -231,7 +241,7 @@ int ITK_user_main(int argc, char** argv)
 
 	/* Call your functions between here */
 	//tag_t session = get_session();
-	
+
 	//std::string tc_root = get_tc_root();
 	//std::string tc_bin = get_tc_bin();
 	//std::cout << "tc root: " << tc_root << std::endl;
@@ -268,7 +278,9 @@ int ITK_user_main(int argc, char** argv)
 	//TCTYPE_ask_class_name2(type, &class_name);
 	//std::cout << "mailbox type name: " << class_name << std::endl;
 
-	create_item();
+	//create_item();
+
+	copy_item("wWPAAQrt5xMzAD", "000500", "A");
 
 	ITK_exit_module(TRUE);
 
