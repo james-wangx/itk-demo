@@ -6,6 +6,7 @@
 #include <tc/tc_util.h>
 #include <tccore/aom.h>
 #include <tccore/aom_prop.h>
+#include <tccore/tctype.h>
 #include <sa/sa.h>
 #include <mld/journal/journal.h>
 
@@ -125,6 +126,22 @@ static tag_t get_user_newstuff_folder(tag_t& user)
 	return user_newstuff_folder;
 }
 
+static tag_t get_user_mailbox_folder(tag_t& user)
+{
+	tag_t mailbox_folder = NULLTAG;
+
+	SA_ask_user_mailbox(user, &mailbox_folder);
+
+	return mailbox_folder;
+}
+
+static tag_t get_user_worklist(tag_t& user)
+{
+	tag_t worklist = NULLTAG;
+
+	
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -181,12 +198,26 @@ int ITK_user_main(int argc, char** argv)
 	//std::cout << "user home folder name: " << home_folder_name << std::endl;
 	//MEM_free(home_folder_name);
 
+	//tag_t user = get_current_user();
+	//tag_t user_newstuff_folder = get_user_newstuff_folder(user);
+	//char* folder_name = nullptr;
+	//AOM_ask_value_string(user_newstuff_folder, "object_name", &folder_name);
+	//std::cout << "user newstuff folder name: " << folder_name << std::endl;
+	//MEM_free(folder_name);
+
 	tag_t user = get_current_user();
-	tag_t user_newstuff_folder = get_user_newstuff_folder(user);
+	tag_t mailbox_folder = get_user_mailbox_folder(user);
 	char* folder_name = nullptr;
-	AOM_ask_value_string(user_newstuff_folder, "object_name", &folder_name);
-	std::cout << "user newstuff folder name: " << folder_name << std::endl;
+	AOM_ask_value_string(mailbox_folder, "object_name", &folder_name);
+	std::cout << "user mailbox folder name: " << folder_name << std::endl;
 	MEM_free(folder_name);
+
+	tag_t type = NULLTAG;
+	char* class_name = nullptr;
+	TCTYPE_ask_object_type(mailbox_folder, &type);
+	TCTYPE_ask_class_name2(type, &class_name);
+	std::cout << "mailbox type name: " << class_name << std::endl;
+
 
 	ITK_exit_module(TRUE);
 
