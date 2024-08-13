@@ -202,6 +202,17 @@ static void copy_item(const char* source_rev_uid, const char* target_item_id, co
 	ITKCALL(ITEM_copy_item(source_rev, target_item_id, target_rev_id, &target_item, &target_rev));
 }
 
+static tag_t get_latest_rev(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t rev = NULLTAG;
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	ITKCALL(ITEM_ask_latest_rev(item, &rev));
+
+	return rev;
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -280,7 +291,12 @@ int ITK_user_main(int argc, char** argv)
 
 	//create_item();
 
-	copy_item("wWPAAQrt5xMzAD", "000500", "A");
+	//copy_item("wWPAAQrt5xMzAD", "000500", "A");
+
+	//char* rev_name = nullptr;
+	//ITEM_ask_rev_name2(get_latest_rev("wWLAAQrt5xMzAD"), &rev_name);
+	//std::cout << "latest item rev: " << rev_name << std::endl;
+	//MEM_free(rev_name);
 
 	ITK_exit_module(TRUE);
 
