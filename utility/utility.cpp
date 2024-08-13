@@ -258,7 +258,22 @@ static tag_t get_latest_released_rev(const char* item_uid)
 		}
 	}
 
+	MEM_free(revs);
 	return latest_released_rev;
+}
+
+static void output_workflow_num(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t* workflows = nullptr;
+	int num = 0;
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	AOM_ask_value_tags(item, "fnd0AllWorkflows", &num, &workflows);
+
+	std::cout << "find workflow num: " << num << std::endl;
+
+	MEM_free(workflows);
 }
 
 int ITK_user_main(int argc, char** argv)
@@ -345,6 +360,9 @@ int ITK_user_main(int argc, char** argv)
 	//ITEM_ask_rev_name2(get_latest_rev("wWLAAQrt5xMzAD"), &rev_name);
 	//std::cout << "latest item rev: " << rev_name << std::endl;
 	//MEM_free(rev_name);
+
+	output_workflow_num("wWLAAQrt5xMzAD");
+
 
 	ITK_exit_module(TRUE);
 
