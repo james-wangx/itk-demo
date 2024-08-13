@@ -4,6 +4,7 @@
 #include <tcinit/tcinit.h>
 #include <tc/emh.h>
 #include <tc/tc_util.h>
+#include <sa/sa.h>
 #include <mld/journal/journal.h>
 
 #include "util.hpp"
@@ -71,6 +72,27 @@ static void output_current_user()
 	MEM_free(username);
 }
 
+static void output_current_group_role()
+{
+	tag_t group_member = NULLTAG;
+	tag_t group = NULLTAG;
+	tag_t role = NULLTAG;
+	char* group_name = nullptr;
+	char* role_name = nullptr;
+
+	SA_ask_current_groupmember(&group_member);
+	SA_ask_groupmember_group(group_member, &group);
+	SA_ask_groupmember_role(group_member, &role);
+	SA_ask_group_name2(group, &group_name);
+	SA_ask_role_name2(role, &role_name);
+
+	std::cout << "current grouo name: " << group_name << std::endl;
+	std::cout << "current role name: " << role_name << std::endl;
+
+	MEM_free(group_name);
+	MEM_free(role_name);
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -116,7 +138,9 @@ int ITK_user_main(int argc, char** argv)
 	//std::cout << "tc root: " << tc_root << std::endl;
 	//std::cout << "tc_bin: " << tc_bin << std::endl;
 
-	output_current_user();
+	//output_current_user();
+
+	output_current_group_role();
 
 
 	ITK_exit_module(TRUE);
