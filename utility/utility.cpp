@@ -11,6 +11,7 @@
 #include <sa/sa.h>
 #include <mld/journal/journal.h>
 
+#include "session.hpp"
 #include "util.hpp"
 
 const int WRONG_USAGE = 100001;
@@ -34,114 +35,6 @@ static inline void output_filename()
 
 	MEM_free(journal_filename);
 	MEM_free(system_log_filename);
-}
-
-static tag_t get_session()
-{
-	tag_t session;
-	POM_ask_session(&session);
-
-	return session;
-}
-
-static std::string get_tc_root()
-{
-	const char* env = "FMS_HOME";
-	const char* fms_home = TC_getenv(env);
-
-	if (!fms_home)
-		std::cout << "Unknown environment variable: " << env << std::endl;
-
-	return util::get_parent_path(fms_home);
-}
-
-static std::string get_tc_bin()
-{
-	std::string tc_root = get_tc_root();
-
-	if (tc_root.empty())
-		return "";
-
-	return tc_root + "\\" + "bin";
-}
-
-static void output_current_user()
-{
-	char* username;
-	tag_t user;
-
-	POM_get_user(&username, &user);
-	std::cout << "current username: " << username << std::endl;
-
-	MEM_free(username);
-}
-
-static void output_current_group_role()
-{
-	tag_t group_member = NULLTAG;
-	tag_t group = NULLTAG;
-	tag_t role = NULLTAG;
-	char* group_name = nullptr;
-	char* role_name = nullptr;
-
-	SA_ask_current_groupmember(&group_member);
-	SA_ask_groupmember_group(group_member, &group);
-	SA_ask_groupmember_role(group_member, &role);
-	SA_ask_group_name2(group, &group_name);
-	SA_ask_role_name2(role, &role_name);
-
-	std::cout << "current grouo name: " << group_name << std::endl;
-	std::cout << "current role name: " << role_name << std::endl;
-
-	MEM_free(group_name);
-	MEM_free(role_name);
-}
-
-static tag_t get_current_user()
-{
-	char* username;
-	tag_t user;
-
-	POM_get_user(&username, &user);
-	std::cout << "current user: " << username << std::endl;
-
-	MEM_free(username);
-	return user;
-}
-
-static tag_t get_user_home_folder(tag_t& user)
-{
-	tag_t user_home_folder = NULLTAG;
-
-	SA_ask_user_home_folder(user, &user_home_folder);
-
-	return user_home_folder;
-}
-
-static tag_t get_user_newstuff_folder(tag_t& user)
-{
-	tag_t user_newstuff_folder = NULLTAG;
-
-	SA_ask_user_newstuff_folder(user, &user_newstuff_folder);
-
-	return user_newstuff_folder;
-}
-
-static tag_t get_user_mailbox_folder(tag_t& user)
-{
-	tag_t mailbox_folder = NULLTAG;
-
-	SA_ask_user_mailbox(user, &mailbox_folder);
-
-	return mailbox_folder;
-}
-
-
-static tag_t get_user_worklist(tag_t& user)
-{
-	tag_t worklist = NULLTAG;
-
-
 }
 
 static void create_item()
@@ -321,8 +214,12 @@ static void output_all_base_revs(const char* item_uid)
 				std::cout << "this is base rev" << std::endl;
 			else
 				std::cout << "this is not base rev" << std::endl;
+			util::mem_free_s(rev_id);
 		}
+		util::mem_free_s(status);
 	}
+
+	util::mem_free_s(revs);
 }
 
 static void create_item_rev(const char* item_uid)
@@ -380,12 +277,16 @@ int ITK_user_main(int argc, char** argv)
 	/* Call your functions between here */
 	//tag_t session = get_session();
 
-	//std::string tc_root = get_tc_root();
+	//std::string tc_root = session::get_tc_root();
 	//std::string tc_bin = get_tc_bin();
-	//std::cout << "tc root: " << tc_root << std::endl;
+	//if (!tc_root.empty())
+	//	std::cout << "tc root: " << tc_root << std::endl;
 	//std::cout << "tc_bin: " << tc_bin << std::endl;
 
-	//output_current_user();
+	//tag_t user = session::get_user();
+	//char* username = nullptr;
+	//POM_ask_user_name(user, &username);
+	//std::cout << "username: " << username << std::endl;
 
 	//output_current_group_role();
 
@@ -427,12 +328,11 @@ int ITK_user_main(int argc, char** argv)
 
 	//output_workflow_num("wWLAAQrt5xMzAD");
 
-	//output_all_revs("wWLAAQrt5xMzAD");
+	//output_all_revs("giFAAQr15xMzAD");
 
-	//output_all_base_revs("wWLAAQrt5xMzAD");
+	//output_all_base_revs("giFAAQr15xMzAD");
 
-	create_item_rev("giFAAQr15xMzAD");
-
+	//create_item_rev("giFAAQr15xMzAD");
 
 	ITK_exit_module(TRUE);
 

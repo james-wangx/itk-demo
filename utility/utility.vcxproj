@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="session.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="session.hpp" />
     <ClInclude Include="util.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
