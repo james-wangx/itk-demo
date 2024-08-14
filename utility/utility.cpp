@@ -325,6 +325,21 @@ static void output_all_base_revs(const char* item_uid)
 	}
 }
 
+static void create_item_rev(const char* item_uid)
+{
+	tag_t item = NULLTAG;
+	tag_t rev = NULLTAG;
+	char* rev_id = nullptr;
+
+	ITK__convert_uid_to_tag(item_uid, &item);
+	ITKCALL(ITEM_create_rev(item, NULL, &rev));
+	ITKCALL(ITEM_save_rev(rev));
+	ITKCALL(AOM_ask_value_string(rev, "item_revision_id", &rev_id));
+
+	std::cout << "new item revision: " << rev_id << std::endl;
+	util::mem_free_s(rev_id);
+}
+
 int ITK_user_main(int argc, char** argv)
 {
 	output_filename();
@@ -414,7 +429,9 @@ int ITK_user_main(int argc, char** argv)
 
 	//output_all_revs("wWLAAQrt5xMzAD");
 
-	output_all_base_revs("wWLAAQrt5xMzAD");
+	//output_all_base_revs("wWLAAQrt5xMzAD");
+
+	create_item_rev("giFAAQr15xMzAD");
 
 
 	ITK_exit_module(TRUE);
