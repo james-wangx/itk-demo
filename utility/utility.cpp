@@ -105,7 +105,8 @@ int ITK_user_main(int argc, char** argv)
     //printf("latest released rev id: %s", rev_id);
 
     // Test create dataset
-    TRANCE(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_secification"));
+    TRANCE(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_specification"));
+    TRANCE(dataset_upload(dataset, "C:\\Users\\Administrator\\Documents\\test.pdf", "PDF_Reference"));
 
     /* Call your functions between here */
     //tag_t session = get_session();

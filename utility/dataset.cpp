@@ -2,6 +2,7 @@
 #include <ae/datasettype.h>
 #include <tccore/aom.h>
 #include <tccore/grm.h>
+#include <sa/tcfile.h>
 
 #include "dataset.hpp"
 #include "util.hpp"
@@ -24,7 +25,26 @@ int dataset_create(const char* rev_uid, tag_t* dataset, const char* dataset_type
     CATCH(GRM_create_relation(rev, *dataset, relation_type, NULL, &relation));
     CATCH(GRM_save_relation(relation));
     CATCH(AOM_unlock(relation));
-    CATCH(AOM_unload(rev));
+    CATCH(AOM_unlock(rev));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_upload(tag_t dataset,const char* file_path, const char* reference_name)
+{
+    int rcode = ITK_ok;
+    tag_t file = NULLTAG;
+    IMF_file_t file_descriptor = NULL;
+
+    CATCH(IMF_import_file(file_path, NULL, SS_BINARY, &file, &file_descriptor));
+    CATCH(IMF_close_file(file_descriptor));
+    CATCH(AOM_save(file));
+    CATCH(AOM_unlock(file));
+    CATCH(AOM_lock(dataset));
+    CATCH(AE_add_dataset_named_ref2(dataset, reference_name, AE_PART_OF, file));
+    CATCH(AE_save_myself(dataset));
+    CATCH(AOM_unlock(dataset));
 
 CLEANUP:
     return rcode;
