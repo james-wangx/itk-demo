@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dataset.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="rev.cpp" />
     <ClCompile Include="session.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dataset.hpp" />
     <ClInclude Include="item.hpp" />
     <ClInclude Include="rev.hpp" />
     <ClInclude Include="session.hpp" />

@@ -14,6 +14,7 @@
 #include "item.hpp"
 #include "rev.hpp"
 #include "session.hpp"
+#include "dataset.hpp"
 #include "util.hpp"
 
 const int WRONG_USAGE = 100001;
@@ -61,6 +62,7 @@ int ITK_user_main(int argc, char** argv)
 
     int rcode = ITK_ok;
     tag_t rev = NULLTAG;
+    tag_t dataset = NULLTAG;
     char* rev_id = NULL;
 
     ITK_CALL_S(ITK_initialize_text_services(0));
@@ -101,6 +103,9 @@ int ITK_user_main(int argc, char** argv)
     //ITK_CALL_S(rev_get_latest_released("ApHAAYiL5xMzAD", &rev));
     //ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
     //printf("latest released rev id: %s", rev_id);
+
+    // Test create dataset
+    ITK_CALL_S(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_specification"));
 
     /* Call your functions between here */
     //tag_t session = get_session();
