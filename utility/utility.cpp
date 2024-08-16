@@ -17,6 +17,7 @@
 #include "util.hpp"
 
 const int WRONG_USAGE = 100001;
+const bool DEBUG = false;
 
 static inline void output_useage()
 {
@@ -58,36 +59,36 @@ int ITK_user_main(int argc, char** argv)
     std::cout << "upw = " << upw << std::endl;
     std::cout << "ugp = " << ugp << std::endl;
 
-    try
-    {
-        ITKCALL_S(ITK_initialize_text_services(0));
-        ITKCALL_S(ITK_init_module(usr, upw, ugp));
-        std::cout << "Login to Teamcenter success as " << usr << std::endl;
+    int rcode = ITK_ok;
 
-        // Need env: TC_JOURNAL=FULL
-        JOURNAL_comment("Preparing to list tool formats\n");
-        TC_write_syslog("Preparing to list tool formats\n");
+    ITK_CALL_S(ITK_initialize_text_services(0));
+    ITK_CALL_S(ITK_init_module(usr, upw, ugp));
+    std::cout << "Login to Teamcenter success as " << usr << std::endl;
 
-        //// Test create rev
-        //char* rev_id = nullptr;
-        //tag_t rev = rev::create_rev("giFAAQr15xMzAD");
-        //ITKCALL_S(ITEM_ask_rev_id2(rev, &rev_id));
-        //std::cout << "new rev id: " << rev_id << std::endl;
+    // Need env: TC_JOURNAL=FULL
+    JOURNAL_comment("Preparing to list tool formats\n");
+    TC_write_syslog("Preparing to list tool formats\n");
 
-        // Test copy rev
-        tag_t rev = rev::copy_rev("giFAAQr15xMzAD");
-        char* item_id;
-        char* rev_id;
-        ITKCALL_S(AOM_ask_value_string(rev, "item_id", &item_id));
-        ITKCALL_S(AOM_ask_value_string(rev, "item_revision_id", &rev_id));
-        std::cout << "item id: " << item_id << "\n"
-            << "item revision id: " << rev_id << std::endl;
-    }
-    catch (const ITKException& e)
-    {
-        std::cerr << e.what() << std::endl;
-        return e.getCode();
-    }
+    //// Test create rev
+    //char* rev_id = nullptr;
+    //tag_t rev = rev::create_rev("giFAAQr15xMzAD");
+    //ITKCALL_S(ITEM_ask_rev_id2(rev, &rev_id));
+    //std::cout << "new rev id: " << rev_id << std::endl;
+
+    //// Test copy rev
+    //tag_t rev = rev::copy_rev("giFAAQr15xMzAD");
+    //char* item_id;
+    //char* rev_id;
+    //ITKCALL_S(AOM_ask_value_string(rev, "item_id", &item_id));
+    //ITKCALL_S(AOM_ask_value_string(rev, "item_revision_id", &rev_id));
+    //std::cout << "item id: " << item_id << "\n"
+    //    << "item revision id: " << rev_id << std::endl;
+
+    // Test revise rev
+    tag_t source;
+    tag_t target;
+    ITK__convert_uid_to_tag("ANMAAYiH5xMzAD", &source);
+    ITK_CALL_S(rev_revise(source, &target));
 
     /* Call your functions between here */
     //tag_t session = get_session();
@@ -173,11 +174,7 @@ int ITK_user_main(int argc, char** argv)
     //	util::mem_free_s(rev_id);
     //}
 
-
-    ITK_exit_module(TRUE);
-
-    std::cout << "Press Enter to continue...";
-    std::cin.get();
-
-    return ITK_ok;
+CLEANUP:
+    ITK_exit_module(true);
+    return rcode;
 }

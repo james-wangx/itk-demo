@@ -7,18 +7,40 @@
 #include <base_utils/Mem.h>
 #include <tc/emh.h>
 
-#define ITKCALL_S(func)                                                        \
-{                                                                              \
-    int status = func;                                                         \
-    if (status != ITK_ok)                                                      \
-    {                                                                          \
-        char* error = nullptr;                                                 \
-        EMH_ask_error_text(status, &error);                                    \
-        std::string message = error;                                           \
-        util::mem_free_s(error);                                               \
-        throw ITKException(message, __FILE__, #func, __LINE__, status);        \
-    }                                                                          \
-}                                                                              \
+#define ITKCALL_S(func)                                                 \
+{                                                                       \
+    int status = func;                                                  \
+    if (status != ITK_ok)                                               \
+    {                                                                   \
+        char* error = nullptr;                                          \
+        EMH_ask_error_text(status, &error);                             \
+        std::string message = error;                                    \
+        util::mem_free_s(error);                                        \
+        throw ITKException(message, __FILE__, #func, __LINE__, status); \
+    }                                                                   \
+}                                                                       \
+
+#define ITK_CALL_S(func)                                                                            \
+{                                                                                                   \
+    if ((rcode = (func)) != ITK_ok)                                                                 \
+    {                                                                                               \
+        char* error;                                                                                \
+        EMH_ask_error_text(rcode, &error);                                                          \
+        TC_write_syslog("\nITK ERROR %d: %s\n    at %s:%d\n", rcode, error, __FILE__, __LINE__);    \
+        printf("\nITK ERROR %d: %s\n    at %s:%d\n", rcode, error, __FILE__, __LINE__);             \
+        MEM_FREE_S(error);                                                                          \
+        goto CLEANUP;                                                                               \
+    }                                                                                               \
+}                                                                                                   \
+
+#define MEM_FREE_S(ptr) \
+{                       \
+    if(ptr)             \
+    {                   \
+        MEM_free(ptr);  \
+        ptr = NULL;     \
+    }                   \
+}                       \
 
 class ITKException : public std::exception
 {

@@ -1,6 +1,9 @@
 #include <tc/tc_startup.h>
 #include <tccore/item.h>
 #include <tcinit/tcinit.h>
+#include <tccore/tctype.h>
+#include <tccore/aom.h>
+#include <tccore/aom_prop.h>
 
 #include "rev.hpp"
 #include "util.hpp"
@@ -20,7 +23,7 @@ namespace rev
         return rev;
     }
 
-    tag_t copy_rev(const char* item_uid) throw( ITKException )
+    tag_t copy_rev(const char* item_uid)
     {
         tag_t item = NULLTAG;
         tag_t source_rev = NULLTAG;
@@ -34,3 +37,28 @@ namespace rev
     }
 
 } // namespace rev
+
+int rev_revise(tag_t source, tag_t* target)
+{
+    int rcode = ITK_ok;
+    tag_t type = NULLTAG;
+    tag_t save_as_input = NULLTAG;
+    tag_t* deep_copy_data = NULL;
+    tag_t* target_copy = NULL;
+    int deep_copy_data_num = 0;
+    int* ifails = NULL;
+
+    ITK_CALL_S(TCTYPE_ask_object_type(source, &type));
+    ITK_CALL_S(TCTYPE_construct_operationinput(type, TCTYPE_OPERATIONINPUT_REVISE, &save_as_input));
+    ITK_CALL_S(TCTYPE_ask_deepcopydata(source, TCTYPE_OPERATIONINPUT_REVISE, &deep_copy_data_num, &deep_copy_data));
+    ITK_CALL_S(AOM_set_value_string(save_as_input, "object_desc", "I was revised"));
+    TCTYPE_revise_objects(1, &source, &save_as_input, &deep_copy_data_num, deep_copy_data, &target_copy, &ifails);
+
+    *target = target_copy[ 0 ];
+    rcode = *ifails;
+
+CLEANUP:
+    MEM_FREE_S(deep_copy_data);
+    MEM_FREE_S(target_copy);
+    return rcode;
+}

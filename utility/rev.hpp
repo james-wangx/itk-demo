@@ -8,6 +8,8 @@ namespace rev
 
     tag_t copy_rev(const char* item_uid);
 
-}
+} // namespace rev
+
+int rev_revise(tag_t source, tag_t* target);
 
 #endif // UTILITY_REV_HPP
