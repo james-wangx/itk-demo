@@ -92,10 +92,15 @@ int ITK_user_main(int argc, char** argv)
     //ITK__convert_uid_to_tag("ANMAAYiH5xMzAD", &source);
     //ITK_CALL_S(rev_revise(source, &target));
 
-    // Test get latest rev
-    ITK_CALL_S(rev_get_latest("giFAAQr15xMzAD", &rev));
-    ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
-    printf("latest item rev id: %s", rev_id);
+    //// Test get latest rev
+    //ITK_CALL_S(rev_get_latest("giFAAQr15xMzAD", &rev));
+    //ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
+    //printf("latest item rev id: %s", rev_id);
+
+    //// Test get latest released rev
+    //ITK_CALL_S(rev_get_latest_released("ApHAAYiL5xMzAD", &rev));
+    //ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
+    //printf("latest released rev id: %s", rev_id);
 
     /* Call your functions between here */
     //tag_t session = get_session();

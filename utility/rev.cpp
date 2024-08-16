@@ -74,3 +74,31 @@ int rev_get_latest(const char* item_uid, tag_t* rev)
 CLEANUP:
     return rcode;
 }
+
+int rev_get_latest_released(const char* item_uid, tag_t* rev)
+{
+    int rcode = ITK_ok;
+    tag_t item = NULLTAG;
+    tag_t* revs = NULL;
+    tag_t* rels = NULL;
+    int rev_count = 0;
+    int rel_count = 0;
+    char* rev_id = NULL;
+
+    ITK__convert_uid_to_tag(item_uid, &item);
+    ITK_CALL_S(ITEM_list_all_revs(item, &rev_count, &revs));
+
+    for (int i = rev_count - 1; i >= 0; i--)
+    {
+        ITK_CALL_S(WSOM_ask_release_status_list(revs[ i ], &rel_count, &rels));
+        if (rel_count > 0)
+        {
+            *rev = revs[ i ];
+            break;
+        }
+    }
+
+CLEANUP:
+    MEM_FREE_S(rev_id);
+    return rcode;
+}
