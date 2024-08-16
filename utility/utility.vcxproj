@@ -20,12 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="rev.cpp" />
     <ClCompile Include="session.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="item.hpp" />
+    <ClInclude Include="rev.hpp" />
     <ClInclude Include="session.hpp" />
     <ClInclude Include="util.hpp" />
   </ItemGroup>

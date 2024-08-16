@@ -27,6 +27,9 @@
     <ClCompile Include="item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.hpp">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="item.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rev.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
