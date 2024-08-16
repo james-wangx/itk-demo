@@ -62,3 +62,15 @@ CLEANUP:
     MEM_FREE_S(target_copy);
     return rcode;
 }
+
+int rev_get_latest(const char* item_uid, tag_t* rev)
+{
+    int rcode = ITK_ok;
+    tag_t item = NULLTAG;
+
+    ITK__convert_uid_to_tag(item_uid, &item);
+    ITK_CALL_S(ITEM_ask_latest_rev(item, rev));
+
+CLEANUP:
+    return rcode;
+}

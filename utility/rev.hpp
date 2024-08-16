@@ -12,4 +12,6 @@ namespace rev
 
 int rev_revise(tag_t source, tag_t* target);
 
+int rev_get_latest(const char* item_uid, tag_t* rev);
+
 #endif // UTILITY_REV_HPP

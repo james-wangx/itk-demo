@@ -60,6 +60,8 @@ int ITK_user_main(int argc, char** argv)
     std::cout << "ugp = " << ugp << std::endl;
 
     int rcode = ITK_ok;
+    tag_t rev = NULLTAG;
+    char* rev_id = NULL;
 
     ITK_CALL_S(ITK_initialize_text_services(0));
     ITK_CALL_S(ITK_init_module(usr, upw, ugp));
@@ -84,11 +86,16 @@ int ITK_user_main(int argc, char** argv)
     //std::cout << "item id: " << item_id << "\n"
     //    << "item revision id: " << rev_id << std::endl;
 
-    // Test revise rev
-    tag_t source;
-    tag_t target;
-    ITK__convert_uid_to_tag("ANMAAYiH5xMzAD", &source);
-    ITK_CALL_S(rev_revise(source, &target));
+    //// Test revise rev
+    //tag_t source;
+    //tag_t target;
+    //ITK__convert_uid_to_tag("ANMAAYiH5xMzAD", &source);
+    //ITK_CALL_S(rev_revise(source, &target));
+
+    // Test get latest rev
+    ITK_CALL_S(rev_get_latest("giFAAQr15xMzAD", &rev));
+    ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
+    printf("latest item rev id: %s", rev_id);
 
     /* Call your functions between here */
     //tag_t session = get_session();
@@ -175,6 +182,7 @@ int ITK_user_main(int argc, char** argv)
     //}
 
 CLEANUP:
+    MEM_FREE_S(rev_id);
     ITK_exit_module(true);
     return rcode;
 }
