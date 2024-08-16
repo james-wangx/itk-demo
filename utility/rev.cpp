@@ -8,7 +8,7 @@
 namespace rev
 {
 
-    tag_t create_rev(const char* item_uid) noexcept( false )
+    tag_t create_rev(const char* item_uid)
     {
         tag_t item = NULLTAG;
         tag_t rev = NULLTAG;
@@ -18,6 +18,19 @@ namespace rev
         ITKCALL_S(ITEM_save_rev(rev));
 
         return rev;
+    }
+
+    tag_t copy_rev(const char* item_uid) throw( ITKException )
+    {
+        tag_t item = NULLTAG;
+        tag_t source_rev = NULLTAG;
+        tag_t target_rev = NULLTAG;
+
+        ITK__convert_uid_to_tag(item_uid, &item);
+        ITKCALL_S(ITEM_ask_latest_rev(item, &source_rev));
+        ITKCALL_S(ITEM_copy_rev(source_rev, NULL, &target_rev));
+
+        return target_rev;
     }
 
 } // namespace rev

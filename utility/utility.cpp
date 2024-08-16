@@ -39,21 +39,6 @@ static inline void output_filename()
     MEM_free(system_log_filename);
 }
 
-static void create_item_rev(const char* item_uid)
-{
-    tag_t item = NULLTAG;
-    tag_t rev = NULLTAG;
-    char* rev_id = nullptr;
-
-    ITK__convert_uid_to_tag(item_uid, &item);
-    ITKCALL(ITEM_create_rev(item, NULL, &rev));
-    ITKCALL(ITEM_save_rev(rev));
-    ITKCALL(AOM_ask_value_string(rev, "item_revision_id", &rev_id));
-
-    std::cout << "new item revision: " << rev_id << std::endl;
-    util::mem_free_s(rev_id);
-}
-
 int ITK_user_main(int argc, char** argv)
 {
     output_filename();
@@ -83,11 +68,20 @@ int ITK_user_main(int argc, char** argv)
         JOURNAL_comment("Preparing to list tool formats\n");
         TC_write_syslog("Preparing to list tool formats\n");
 
-        // Test create rev
-        char* rev_id = nullptr;
-        tag_t rev = rev::create_rev("giFAAQr15xMzAD");
-        ITKCALL_S(ITEM_ask_rev_id2(rev, &rev_id));
-        std::cout << "new rev id: " << rev_id << std::endl;
+        //// Test create rev
+        //char* rev_id = nullptr;
+        //tag_t rev = rev::create_rev("giFAAQr15xMzAD");
+        //ITKCALL_S(ITEM_ask_rev_id2(rev, &rev_id));
+        //std::cout << "new rev id: " << rev_id << std::endl;
+
+        // Test copy rev
+        tag_t rev = rev::copy_rev("giFAAQr15xMzAD");
+        char* item_id;
+        char* rev_id;
+        ITKCALL_S(AOM_ask_value_string(rev, "item_id", &item_id));
+        ITKCALL_S(AOM_ask_value_string(rev, "item_revision_id", &rev_id));
+        std::cout << "item id: " << item_id << "\n"
+            << "item revision id: " << rev_id << std::endl;
     }
     catch (const ITKException& e)
     {
