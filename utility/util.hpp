@@ -20,18 +20,31 @@
     }                                                                   \
 }                                                                       \
 
-#define ITK_CALL_S(func)                                                                            \
-{                                                                                                   \
-    if ((rcode = (func)) != ITK_ok)                                                                 \
-    {                                                                                               \
-        char* error;                                                                                \
-        EMH_ask_error_text(rcode, &error);                                                          \
-        TC_write_syslog("\nITK ERROR %d: %s\n    at %s:%d\n", rcode, error, __FILE__, __LINE__);    \
-        printf("\nITK ERROR %d: %s\n    at %s:%d\n", rcode, error, __FILE__, __LINE__);             \
-        MEM_FREE_S(error);                                                                          \
-        goto CLEANUP;                                                                               \
-    }                                                                                               \
-}                                                                                                   \
+#define LOG(X) printf X; TC_write_syslog X;
+
+#define CATCH(func)                                     \
+{                                                       \
+    if ((rcode = (func)) != ITK_ok)                     \
+    {                                                   \
+        char* error;                                    \
+        EMH_ask_error_text(rcode, &error);              \
+        LOG(("\nITK ERROR %d: %s\n", rcode, error));    \
+        LOG(("    call %s\n", #func));                  \
+        LOG(("        at %s:%d\n", __FILE__, __LINE__));\
+        MEM_FREE_S(error);                              \
+        goto CLEANUP;                                   \
+    }                                                   \
+}                                                       \
+
+#define TRANCE(func)                                    \
+{                                                       \
+    if ((rcode = (func)) != ITK_ok)                     \
+    {                                                   \
+        LOG(("    call %s\n", #func));                  \
+        LOG(("        at %s:%d\n", __FILE__, __LINE__));\
+        goto CLEANUP;                                   \
+    }                                                   \
+}                                                       \
 
 #define MEM_FREE_S(ptr) \
 {                       \

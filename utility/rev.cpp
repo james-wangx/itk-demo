@@ -48,10 +48,10 @@ int rev_revise(tag_t source, tag_t* target)
     int deep_copy_data_num = 0;
     int* ifails = NULL;
 
-    ITK_CALL_S(TCTYPE_ask_object_type(source, &type));
-    ITK_CALL_S(TCTYPE_construct_operationinput(type, TCTYPE_OPERATIONINPUT_REVISE, &save_as_input));
-    ITK_CALL_S(TCTYPE_ask_deepcopydata(source, TCTYPE_OPERATIONINPUT_REVISE, &deep_copy_data_num, &deep_copy_data));
-    ITK_CALL_S(AOM_set_value_string(save_as_input, "object_desc", "I was revised"));
+    CATCH(TCTYPE_ask_object_type(source, &type));
+    CATCH(TCTYPE_construct_operationinput(type, TCTYPE_OPERATIONINPUT_REVISE, &save_as_input));
+    CATCH(TCTYPE_ask_deepcopydata(source, TCTYPE_OPERATIONINPUT_REVISE, &deep_copy_data_num, &deep_copy_data));
+    CATCH(AOM_set_value_string(save_as_input, "object_desc", "I was revised"));
     TCTYPE_revise_objects(1, &source, &save_as_input, &deep_copy_data_num, deep_copy_data, &target_copy, &ifails);
 
     *target = target_copy[ 0 ];
@@ -69,7 +69,7 @@ int rev_get_latest(const char* item_uid, tag_t* rev)
     tag_t item = NULLTAG;
 
     ITK__convert_uid_to_tag(item_uid, &item);
-    ITK_CALL_S(ITEM_ask_latest_rev(item, rev));
+    CATCH(ITEM_ask_latest_rev(item, rev));
 
 CLEANUP:
     return rcode;
@@ -86,11 +86,11 @@ int rev_get_latest_released(const char* item_uid, tag_t* rev)
     char* rev_id = NULL;
 
     ITK__convert_uid_to_tag(item_uid, &item);
-    ITK_CALL_S(ITEM_list_all_revs(item, &rev_count, &revs));
+    CATCH(ITEM_list_all_revs(item, &rev_count, &revs));
 
     for (int i = rev_count - 1; i >= 0; i--)
     {
-        ITK_CALL_S(WSOM_ask_release_status_list(revs[ i ], &rel_count, &rels));
+        CATCH(WSOM_ask_release_status_list(revs[ i ], &rel_count, &rels));
         if (rel_count > 0)
         {
             *rev = revs[ i ];

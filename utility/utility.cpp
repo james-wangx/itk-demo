@@ -65,8 +65,8 @@ int ITK_user_main(int argc, char** argv)
     tag_t dataset = NULLTAG;
     char* rev_id = NULL;
 
-    ITK_CALL_S(ITK_initialize_text_services(0));
-    ITK_CALL_S(ITK_init_module(usr, upw, ugp));
+    CATCH(ITK_initialize_text_services(0));
+    CATCH(ITK_init_module(usr, upw, ugp));
     std::cout << "Login to Teamcenter success as " << usr << std::endl;
 
     // Need env: TC_JOURNAL=FULL
@@ -105,7 +105,7 @@ int ITK_user_main(int argc, char** argv)
     //printf("latest released rev id: %s", rev_id);
 
     // Test create dataset
-    ITK_CALL_S(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_specification"));
+    TRANCE(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_secification"));
 
     /* Call your functions between here */
     //tag_t session = get_session();

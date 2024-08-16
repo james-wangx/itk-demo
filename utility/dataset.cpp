@@ -16,15 +16,15 @@ int dataset_create(const char* rev_uid, tag_t* dataset, const char* dataset_type
     tag_t relation_type = NULLTAG;
 
     ITK__convert_uid_to_tag(rev_uid, &rev);
-    ITK_CALL_S(AE_find_datasettype2(dataset_type_name, &dataset_type));
-    ITK_CALL_S(AE_create_dataset_with_id(dataset_type, dataset_name, dataset_desc, NULL, NULL, dataset));
-    ITK_CALL_S(AOM_save(*dataset));
-    ITK_CALL_S(AOM_lock(rev));
+    CATCH(AE_find_datasettype2(dataset_type_name, &dataset_type));
+    CATCH(AE_create_dataset_with_id(dataset_type, dataset_name, dataset_desc, NULL, NULL, dataset));
+    CATCH(AOM_save(*dataset));
+    CATCH(AOM_lock(rev));
     GRM_find_relation_type(relation_type_name, &relation_type);
-    ITK_CALL_S(GRM_create_relation(rev, *dataset, relation_type, NULL, &relation));
-    ITK_CALL_S(GRM_save_relation(relation));
-    ITK_CALL_S(AOM_unlock(relation));
-    ITK_CALL_S(AOM_unload(rev));
+    CATCH(GRM_create_relation(rev, *dataset, relation_type, NULL, &relation));
+    CATCH(GRM_save_relation(relation));
+    CATCH(AOM_unlock(relation));
+    CATCH(AOM_unload(rev));
 
 CLEANUP:
     return rcode;
