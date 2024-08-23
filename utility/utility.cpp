@@ -47,10 +47,6 @@ int ITK_user_main(int argc, char** argv)
         return WRONG_USAGE;
     }
 
-    std::cout << "usr = " << usr << std::endl;
-    std::cout << "upw = " << upw << std::endl;
-    std::cout << "ugp = " << ugp << std::endl;
-
     int rcode = ITK_ok;
     tag_t rev = NULLTAG;
     tag_t dataset = NULLTAG;
@@ -58,7 +54,7 @@ int ITK_user_main(int argc, char** argv)
 
     CATCH(ITK_initialize_text_services(0));
     CATCH(ITK_init_module(usr, upw, ugp));
-    std::cout << "Login to Teamcenter success as " << usr << std::endl;
+    printf("Login to Teamcenter success as %s", usr);
     output_filename();
 
     // Need env: TC_JOURNAL=FULL
@@ -102,9 +98,13 @@ int ITK_user_main(int argc, char** argv)
     //// Test upload dataset
     //TRANCE(dataset_upload(dataset, "C:\\Users\\Administrator\\Documents\\test.pdf", "PDF_Reference"));
 
-    // Test replace reference
+    //// Test replace reference
+    //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
+    //TRANCE(dataset_replace_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\replace.pdf"));
+
+    // Test export dataset ref
     ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
-    TRANCE(dataset_replace_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\replace.pdf"));
+    TRANCE(dataset_export_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\export.pdf"))
 
     /* Call your functions between here */
     //tag_t session = get_session();

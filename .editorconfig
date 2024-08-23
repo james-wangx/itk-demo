@@ -12,8 +12,8 @@ guidelines = 120
 [*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
 
 # Visual C++ Code Style settings
-
-cpp_generate_documentation_comments = xml
+# none, xml, doxygen_triple_slash, doxygen_slash_star, doxygen_slash_star_exclamation, doxygen_double_slash_exclamation
+cpp_generate_documentation_comments = doxygen_slash_star
 
 # Visual C++ Formatting settings
 

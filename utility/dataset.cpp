@@ -32,7 +32,7 @@ CLEANUP:
     return rcode;
 }
 
-int dataset_upload(tag_t dataset, const char* file_path, const char* reference_name)
+int dataset_import_ref(tag_t dataset, const char* file_path, const char* reference_name)
 {
     int rcode = ITK_ok;
     tag_t file = NULLTAG;
@@ -59,6 +59,19 @@ int dataset_replace_ref(tag_t dataset, const char* ref_name, const char* target_
 
     CATCH(AE_ask_dataset_named_ref2(dataset, ref_name, &ref_type, &ref));
     CATCH(IMF_replace_file(ref, target_ref_path, false));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_export_ref(tag_t dataset, const char* ref_name, const char* ref_path)
+{
+    int rcode = ITK_ok;
+    AE_reference_type_t ref_type;
+    tag_t ref = NULLTAG;
+
+    CATCH(AE_ask_dataset_named_ref2(dataset, ref_name, &ref_type, &ref));
+    CATCH(IMF_export_file(ref, ref_path));
 
 CLEANUP:
     return rcode;
