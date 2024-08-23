@@ -51,10 +51,12 @@ int ITK_user_main(int argc, char** argv)
     tag_t rev = NULLTAG;
     tag_t dataset = NULLTAG;
     char* rev_id = NULL;
+    char* name = NULL;
+    logical is_checked_out = false;
 
     CATCH(ITK_initialize_text_services(0));
     CATCH(ITK_init_module(usr, upw, ugp));
-    printf("Login to Teamcenter success as %s", usr);
+    printf("Login to Teamcenter success as %s\n", usr);
     output_filename();
 
     // Need env: TC_JOURNAL=FULL
@@ -102,9 +104,18 @@ int ITK_user_main(int argc, char** argv)
     //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
     //TRANCE(dataset_replace_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\replace.pdf"));
 
-    // Test export dataset ref
+    //// Test export dataset ref
+    //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
+    //TRANCE(dataset_export_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\export.pdf"));
+
+    // Test whether the dataset is checked out
     ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
-    TRANCE(dataset_export_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\export.pdf"))
+    CATCH(AOM_ask_value_string(dataset, "object_name", &name));
+    TRANCE(dataset_is_checked_out(dataset, &is_checked_out));
+    if (is_checked_out)
+        printf("dataset %s is checked out", name);
+    else
+        printf("dataset %s not checked out", name);
 
     /* Call your functions between here */
     //tag_t session = get_session();
@@ -192,6 +203,7 @@ int ITK_user_main(int argc, char** argv)
 
 CLEANUP:
     MEM_FREE_S(rev_id);
+    MEM_FREE_S(name);
     ITK_exit_module(true);
     return rcode;
 }

@@ -10,4 +10,6 @@ int dataset_replace_ref(tag_t dataset, const char* ref_name, const char* target_
 
 int dataset_export_ref(tag_t dataset, const char* ref_name, const char* ref_path);
 
+int dataset_is_checked_out(tag_t dataset, logical* is_checked_out);
+
 #endif // UTILITY_DATASET_HPP

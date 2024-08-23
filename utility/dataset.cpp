@@ -4,6 +4,7 @@
 #include <tccore/grm.h>
 #include <sa/tcfile.h>
 #include <fclasses/tc_string.h>
+#include <res/res_itk.h>
 
 #include "dataset.hpp"
 #include "util.hpp"
@@ -72,6 +73,16 @@ int dataset_export_ref(tag_t dataset, const char* ref_name, const char* ref_path
 
     CATCH(AE_ask_dataset_named_ref2(dataset, ref_name, &ref_type, &ref));
     CATCH(IMF_export_file(ref, ref_path));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_is_checked_out(tag_t dataset, logical* is_checked_out)
+{
+    int rcode = ITK_ok;
+
+    CATCH(RES_is_checked_out(dataset, is_checked_out));
 
 CLEANUP:
     return rcode;
