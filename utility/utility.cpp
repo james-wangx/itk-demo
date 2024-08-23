@@ -58,7 +58,6 @@ int ITK_user_main(int argc, char** argv)
     CATCH(ITK_init_module(usr, upw, ugp));
     printf("Login to Teamcenter success as %s\n", usr);
     output_filename();
-
     // Need env: TC_JOURNAL=FULL
     JOURNAL_comment("Preparing to list tool formats\n");
     TC_write_syslog("Preparing to list tool formats\n");
@@ -108,14 +107,24 @@ int ITK_user_main(int argc, char** argv)
     //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
     //TRANCE(dataset_export_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\export.pdf"));
 
-    // Test whether the dataset is checked out
-    ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
-    CATCH(AOM_ask_value_string(dataset, "object_name", &name));
-    TRANCE(dataset_is_checked_out(dataset, &is_checked_out));
-    if (is_checked_out)
-        printf("dataset %s is checked out", name);
-    else
-        printf("dataset %s not checked out", name);
+    //// Test whether the dataset is checked out
+    //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
+    //CATCH(AOM_ask_value_string(dataset, "object_name", &name));
+    //TRANCE(dataset_is_checked_out(dataset, &is_checked_out));
+    //if (is_checked_out)
+    //    printf("dataset %s is checked out", name);
+    //else
+    //    printf("dataset %s not checked out", name);
+
+    //// Test checkout dataset
+    //ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
+    //TRANCE(dataset_checkout(dataset));
+
+    //// Test checkin dataset
+    //TRANCE(dataset_checkin(dataset));
+
+    //// Test cancel checkout dataset
+    //TRANCE(dataset_cancel_checkout(dataset, false));
 
     /* Call your functions between here */
     //tag_t session = get_session();

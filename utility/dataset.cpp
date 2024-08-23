@@ -87,3 +87,33 @@ int dataset_is_checked_out(tag_t dataset, logical* is_checked_out)
 CLEANUP:
     return rcode;
 }
+
+int dataset_checkout(tag_t dataset)
+{
+    int rcode = ITK_ok;
+
+    CATCH(RES_checkout2(dataset, NULL, NULL, "C:\\temp", RES_EXPORT_FILE));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_checkin(tag_t dataset)
+{
+    int rcode = ITK_ok;
+
+    CATCH(RES_checkin(dataset));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_cancel_checkout(tag_t dataset, logical save)
+{
+    int rcode = ITK_ok;
+
+    CATCH(RES_cancel_checkout(dataset, save));
+
+CLEANUP:
+    return rcode;
+}

@@ -12,4 +12,10 @@ int dataset_export_ref(tag_t dataset, const char* ref_name, const char* ref_path
 
 int dataset_is_checked_out(tag_t dataset, logical* is_checked_out);
 
+int dataset_checkout(tag_t dataset);
+
+int dataset_checkin(tag_t dataset);
+
+int dataset_cancel_checkout(tag_t dataset, logical save);
+
 #endif // UTILITY_DATASET_HPP
