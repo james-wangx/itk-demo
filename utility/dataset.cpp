@@ -3,6 +3,7 @@
 #include <tccore/aom.h>
 #include <tccore/grm.h>
 #include <sa/tcfile.h>
+#include <fclasses/tc_string.h>
 
 #include "dataset.hpp"
 #include "util.hpp"
@@ -31,7 +32,7 @@ CLEANUP:
     return rcode;
 }
 
-int dataset_upload(tag_t dataset,const char* file_path, const char* reference_name)
+int dataset_upload(tag_t dataset, const char* file_path, const char* reference_name)
 {
     int rcode = ITK_ok;
     tag_t file = NULLTAG;
@@ -45,6 +46,19 @@ int dataset_upload(tag_t dataset,const char* file_path, const char* reference_na
     CATCH(AE_add_dataset_named_ref2(dataset, reference_name, AE_PART_OF, file));
     CATCH(AE_save_myself(dataset));
     CATCH(AOM_unlock(dataset));
+
+CLEANUP:
+    return rcode;
+}
+
+int dataset_replace_ref(tag_t dataset, const char* ref_name, const char* target_ref_path)
+{
+    int rcode = ITK_ok;
+    AE_reference_type_t ref_type;
+    tag_t ref = NULLTAG;
+
+    CATCH(AE_ask_dataset_named_ref2(dataset, ref_name, &ref_type, &ref));
+    CATCH(IMF_replace_file(ref, target_ref_path, false));
 
 CLEANUP:
     return rcode;

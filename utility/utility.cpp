@@ -20,13 +20,6 @@
 const int WRONG_USAGE = 100001;
 const bool DEBUG = false;
 
-static inline void output_useage()
-{
-    std::cout << "\nUSEAGE: utility -u=user -p=password -g=group" << std::endl;
-
-    return;
-}
-
 static inline void output_filename()
 {
     char* journal_filename;
@@ -43,8 +36,6 @@ static inline void output_filename()
 
 int ITK_user_main(int argc, char** argv)
 {
-    output_filename();
-
     char* usr = ITK_ask_cli_argument("-u=");
     char* upw = ITK_ask_cli_argument("-p=");
     char* ugp = ITK_ask_cli_argument("-g=");
@@ -52,7 +43,7 @@ int ITK_user_main(int argc, char** argv)
 
     if (!usr || !upw || !ugp || help)
     {
-        output_useage();
+        printf("\nUSEAGE: utility -u=user -p=password -g=group\n");
         return WRONG_USAGE;
     }
 
@@ -68,6 +59,7 @@ int ITK_user_main(int argc, char** argv)
     CATCH(ITK_initialize_text_services(0));
     CATCH(ITK_init_module(usr, upw, ugp));
     std::cout << "Login to Teamcenter success as " << usr << std::endl;
+    output_filename();
 
     // Need env: TC_JOURNAL=FULL
     JOURNAL_comment("Preparing to list tool formats\n");
@@ -104,9 +96,15 @@ int ITK_user_main(int argc, char** argv)
     //ITK_CALL_S(ITEM_ask_rev_id2(rev, &rev_id));
     //printf("latest released rev id: %s", rev_id);
 
-    // Test create dataset
-    TRANCE(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_specification"));
-    TRANCE(dataset_upload(dataset, "C:\\Users\\Administrator\\Documents\\test.pdf", "PDF_Reference"));
+    //// Test create dataset
+    //TRANCE(dataset_create("gqFAAYiL5xMzAD", &dataset, "PDF", "test name", "test desc", "IMAN_specification"));
+
+    //// Test upload dataset
+    //TRANCE(dataset_upload(dataset, "C:\\Users\\Administrator\\Documents\\test.pdf", "PDF_Reference"));
+
+    // Test replace reference
+    ITK__convert_uid_to_tag("ABAAAgS45xMzAD", &dataset);
+    TRANCE(dataset_replace_ref(dataset, "PDF_Reference", "C:\\Users\\Administrator\\Documents\\replace.pdf"));
 
     /* Call your functions between here */
     //tag_t session = get_session();

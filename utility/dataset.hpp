@@ -6,4 +6,6 @@ int dataset_create(const char* rev_uid, tag_t* dataset, const char* dataset_type
 
 int dataset_upload(tag_t dataset, const char* file_path, const char* reference_name);
 
+int dataset_replace_ref(tag_t dataset, const char* ref_name, const char* target_ref_path);
+
 #endif // UTILITY_DATASET_HPP
